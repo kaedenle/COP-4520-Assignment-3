@@ -181,7 +181,7 @@ class TempMod implements Runnable{
 		for(int i  = startingIndex; i <= endingIndex; i++)
 		{
 			ll.add(Memory[i], (i % 60) + 1);
-			if(i + 10 < N*60) {
+			if(i + 10 <= endingIndex) {
 				synchronized(this) {
 					if(greaterThanCompareAndSet(Math.abs(Memory[i] - Memory[i + 10]), diff))
 					{
@@ -258,7 +258,7 @@ public class Rover {
 		int time = s.nextInt();
 		long startTime = System.nanoTime();
 		//System.out.println("The Starting Value is: " + startingValue);
-		int N = 1;
+		int N = 8;
 		Thread[] tList = new Thread[N];
 		
 		//setup all the threads
