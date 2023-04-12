@@ -221,8 +221,8 @@ class TempMod implements Runnable{
 			long CalcTime = System.nanoTime();
 			Calculate();
 			String out = "Thread "+ ID+" calculated in " + (System.nanoTime() - CalcTime)/1000000f + " ms\n";
-			System.out.print(out);
-			output += out;
+			System.out.println(out);
+			synchronized(this) {output += out;} 
 			//spin until all threads have caught up
 			if(counter.incrementAndGet() < N) {
 				//insert short delay to not crash computer
@@ -284,7 +284,7 @@ public class Rover {
 		String out = "Full program took " + ((endTime - startTime)/1000000f) + "ms to execute";
 		System.out.println(out);
 		TempMod.output += out;
-		Path fileName = Path.of(Paths.get("").toAbsolutePath().toString() + "_output.txt");
+		Path fileName = Path.of(Paths.get("").toAbsolutePath().toString() + "/_output.txt");
 		try {
 			Files.writeString(fileName, (TempMod.output));
 		} catch (IOException e) {
