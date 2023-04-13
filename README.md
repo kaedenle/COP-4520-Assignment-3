@@ -1,7 +1,39 @@
+#Present
+## Running
+1. Compile the file with javac 'Present.java'
+2. Run with 'java Present'
+3. There will be 1 prompt asking you if you want output or not
+
+## Explaination
+- The program starts by populating an ArrayList with values from 1 to 500000
+- This ArrayList is then shuffled
+- The minions will alternate between adding presents to the linked list and removing them and writing a thank you note
+   * The minotaur will periodically ask a random minion to check for a random present
+   * The minion will see if the present is there and output whether or not it exists in the list
+   * The Linked List is a fine-grained implementation, making use of hand over hand locking.
+- To take from the random bag, each minion will increment a shared index counter.
+   * This shared counter is implemented with an AtomicInteger
+   * To prevent race conditions with the AtomicInteger, a getAndIncrement is done when trying to access the next element of the shuffled ArrayList
+   * The minion will take a random shuffled number form the beginning of the ArrayList
+   * If this index counter is over size of the ArrayList, the minions will stop trying to pull presents and only remove.
+## Efficiency
+ - Instead of pulling a random gift from the Linked List, the first element of the linked list is pulled.
+   * This prevents the minion from taking time looking down the line of a long Linked List.
+   * A custom function, 'removeAtIndex(int index)' was created to supplement this. When removing we remove the first index by calling 'LinkedListInstance.removeAtIndex(0)'
+## Correctness
+ - The Linked List in this program makes use of Hand over Hand Locking
+   * To prevent race conditions and incorrect results, 2 node objects will be locked in the linked list.
+   * These are the predecessor and the current node. 
+   * When moving onto the next node, only the predecessor is unlocked and the successor becomes locked. THe successor is the new current and the old current is the new predecessor
+ - This is applied whether each minion is checking to see if a gift exists, removing the first element (the head is locked), or adding an element further down the chain.
+## Progress
+ - Due to the locking involved in the linked list, there is no contention that can occur among the minions and thus all can make progress.
+ - Furthermore, due to how the shared index when pulling from the bag is implemented, each thread will recognize when there are no more gifts to pull from the random bag. Even if they were currently trying to add a new gift.
+ 
 # Rover
 ## Running
-1. Compile the file with javac Rover.java
-2. Run with java Rover
+1. Compile the file with 'javac Rover.java'
+2. Run with 'java Rover'
 3. There will be 2 prompts by the program
   * Hours: How many cycles of collection (60 minutes) would you like to simulate
   * Simulated Time (ms, integer): How long should the collection intervals be (this will simulate the minute given in the assignment prompt). 0ms will try to run the program as fast as possible, although it can't keep up with it.
